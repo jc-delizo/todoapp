@@ -218,7 +218,7 @@ def delete_task(request, todoitem_id):
 
 	return redirect('todolist:index')
 
-def add_event(request):
+def add_events(request):
     if request.method == 'POST':
         form = EventItemForm(request.POST)
         if form.is_valid():
@@ -231,12 +231,12 @@ def add_event(request):
             # Check if there are any overlapping events
             overlapping_events = EventItem.objects.filter(user_id=user_id, start_time__lt=end_time, end_time__gt=start_time)
             if overlapping_events.exists():
-                return redirect('add_event')
+                return redirect('todolist:add_events')
 
             # Create new event if no overlaps
             event = EventItem(name=name, description=description, start_time=start_time, end_time=end_time, user_id=user_id)
             event.save()
-            return redirect('add_event')
+            return redirect('todolist:add_events')
 
     else:
         form = EventItemForm()
@@ -245,4 +245,4 @@ def add_event(request):
         'form': form,
     }
 
-    return render(request, 'add_event.html', context)
+    return render(request, 'add_events.html', context)
